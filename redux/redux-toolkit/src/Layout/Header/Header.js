@@ -5,11 +5,19 @@ import { useNavigate } from "react-router-dom";
 
 const Header = (props) => {
   const navigate = useNavigate();
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  }
+
   const items = [
     {
       label: "Home",
       icon: "pi pi-fw pi-home",
-      command: () => {navigate('/') }
+      command: () => {
+        navigate("/");
+      },
     },
     // {
     //   label: "Users",
@@ -24,7 +32,16 @@ const Header = (props) => {
     {
       label: "Student",
       icon: "pi pi-fw pi-user",
-      command: () => {navigate('/student') }
+      command: () => {
+        navigate("/student");
+      },
+    },
+    {
+      label: "Logout",
+      icon: "pi pi-fw pi-sign-out",
+      command: () => {
+        logout();
+      },
     },
   ];
 
@@ -32,7 +49,7 @@ const Header = (props) => {
     <div className="card">
       <Menubar
         model={items}
-        start={<InputText placeholder="Search" type="text" />}
+        end={<InputText placeholder="Search" type="text" />}
       />
     </div>
   );

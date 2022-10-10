@@ -1,12 +1,13 @@
 let mongoose = require("mongoose"),
   express = require("express"),
   router = express.Router();
-  
+
+const { auth } = require("../middleware/auth");
 // Student Model
 let studentSchema = require("../models/student");
-  
+
 // CREATE Student
-router.post("/create-student", (req, res, next) => {
+router.post("/create-student", auth, (req, res, next) => {
   studentSchema.create(req.body, (error, data) => {
     if (error) {
       return next(error);
@@ -16,26 +17,25 @@ router.post("/create-student", (req, res, next) => {
     }
   });
 });
-  
+
 // READ Students
-router.get("/", (req, res) => {
+router.get("/", auth, (req, res) => {
   studentSchema.find((error, data) => {
     if (error) {
       return next(error);
     } else {
-        console.log("data",data);
+      console.log("data", data);
       res.json(data);
     }
   });
 });
-  
+
 // UPDATE student
 router
   .route("/update-student/:id")
   // Get Single Student
-  .get((req, res) => {
-    studentSchema.findById(
-        req.params.id, (error, data) => {
+  .get(auth, (req, res) => {
+    studentSchema.findById(req.params.id, (error, data) => {
       if (error) {
         return next(error);
       } else {
@@ -43,9 +43,9 @@ router
       }
     });
   })
-  
+
   // Update Student Data
-  .put((req, res, next) => {
+  .put(auth, (req, res, next) => {
     studentSchema.findByIdAndUpdate(
       req.params.id,
       {
@@ -62,12 +62,10 @@ router
       }
     );
   });
-  
+
 // Delete Student
-router.delete("/delete-student/:id", 
-(req, res, next) => {
-  studentSchema.findByIdAndRemove(
-      req.params.id, (error, data) => {
+router.delete("/delete-student/:id", auth, (req, res, next) => {
+  studentSchema.findByIdAndRemove(req.params.id, (error, data) => {
     if (error) {
       return next(error);
     } else {
@@ -77,5 +75,5 @@ router.delete("/delete-student/:id",
     }
   });
 });
-  
+
 module.exports = router;

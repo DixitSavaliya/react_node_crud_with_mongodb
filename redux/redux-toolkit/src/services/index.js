@@ -1,4 +1,5 @@
 import axios from "axios";
+import { loginSuccess } from "../features/login/loginSlice";
 import {
   createStudentsData,
   editStudentsData,
@@ -6,12 +7,34 @@ import {
 } from "../features/student/studentSlice";
 import { getUsersData } from "../features/users/userSlice";
 
+let headers = {
+  "Content-Type": "application/json",
+  authorization: localStorage.getItem("token")
+    ? localStorage.getItem("token")
+    : null,
+};
+
+export const login = (dispatch, data) => {
+  const loginUser = "http://localhost:4000/auth/login";
+  return axios
+    .post(loginUser, data)
+    .then((res) => {
+      console.log("res", res);
+      dispatch(loginSuccess(res.data));
+      return res.data;
+    })
+    .catch((err) => {
+      console.log("err", err);
+    });
+};
+
 export const getUsers = (dispatch) => {
   const userApi = "https://jsonplaceholder.typicode.com/users";
   return axios
-    .get(userApi)
+    .get(userApi, { headers: headers })
     .then((res) => {
-      return dispatch(getUsersData(res.data));
+      dispatch(getUsersData(res.data));
+      return res;
     })
     .catch((err) => {
       console.log("err", err);
@@ -21,9 +44,10 @@ export const getUsers = (dispatch) => {
 export const getStudentsData = (dispatch) => {
   const getStudentApi = "http://localhost:4000/students/";
   return axios
-    .get(getStudentApi)
+    .get(getStudentApi, { headers: headers })
     .then((res) => {
-      return dispatch(getStudentsAllData(res.data));
+      dispatch(getStudentsAllData(res.data));
+      return res;
     })
     .catch((err) => {
       console.log("err", err);
@@ -33,9 +57,10 @@ export const getStudentsData = (dispatch) => {
 export const createStudentData = (dispatch, data) => {
   const createStudent = "http://localhost:4000/students/create-student";
   return axios
-    .post(createStudent, data)
+    .post(createStudent, data, { headers: headers })
     .then((res) => {
-      return dispatch(createStudentsData(res.data));
+      dispatch(createStudentsData(res.data));
+      return res;
     })
     .catch((err) => {
       console.log("err", err);
@@ -45,9 +70,10 @@ export const createStudentData = (dispatch, data) => {
 export const editStudentData = (dispatch, data, student) => {
   const editStudent = `http://localhost:4000/students/update-student/${student._id}`;
   return axios
-    .put(editStudent, data)
+    .put(editStudent, data, { headers: headers })
     .then((res) => {
-      return dispatch(editStudentsData(res.data));
+      dispatch(editStudentsData(res.data));
+      return res;
     })
     .catch((err) => {
       console.log("err", err);
@@ -55,13 +81,13 @@ export const editStudentData = (dispatch, data, student) => {
 };
 
 export const deleteStudentData = (dispatch, data) => {
-    const deleteStudent = `http://localhost:4000/students/delete-student/${data._id}`;
-    return axios
-      .delete(deleteStudent)
-      .then((res) => {
-        return res;
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
-  };
+  const deleteStudent = `http://localhost:4000/students/delete-student/${data._id}`;
+  return axios
+    .delete(deleteStudent, { headers: headers })
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      console.log("err", err);
+    });
+};
