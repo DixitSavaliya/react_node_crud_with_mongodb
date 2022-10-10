@@ -6,9 +6,9 @@ import { useNavigate } from "react-router-dom";
 const Header = (props) => {
   const navigate = useNavigate();
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
+  const logout = async () => {
+    localStorage.removeItem('token');
+    await navigate("/login");
   }
 
   const items = [

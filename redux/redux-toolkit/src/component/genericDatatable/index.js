@@ -21,9 +21,9 @@ const GenericDatatable = (props) => {
           paginator
           className="p-datatable-customers"
           header={header ? header : null}
-          rows={10}
+          rows={5}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          rowsPerPageOptions={[10, 25, 50]}
+          rowsPerPageOptions={[5,10, 25, 50]}
           dataKey="id"
           rowHover
           filters={filters}

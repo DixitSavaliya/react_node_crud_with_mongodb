@@ -7,21 +7,14 @@ import {
 } from "../features/student/studentSlice";
 import { getUsersData } from "../features/users/userSlice";
 
-let headers = {
-  "Content-Type": "application/json",
-  authorization: localStorage.getItem("token")
-    ? localStorage.getItem("token")
-    : null,
-};
-
 export const login = (dispatch, data) => {
   const loginUser = "http://localhost:4000/auth/login";
   return axios
     .post(loginUser, data)
-    .then((res) => {
-      console.log("res", res);
-      dispatch(loginSuccess(res.data));
-      return res.data;
+    .then(async (res) => {
+      localStorage.setItem("token", res.data.token);
+      await dispatch(loginSuccess(res.data));
+      return res;
     })
     .catch((err) => {
       console.log("err", err);
@@ -31,10 +24,9 @@ export const login = (dispatch, data) => {
 export const getUsers = (dispatch) => {
   const userApi = "https://jsonplaceholder.typicode.com/users";
   return axios
-    .get(userApi, { headers: headers })
-    .then((res) => {
-      dispatch(getUsersData(res.data));
-      return res;
+    .get(userApi)
+    .then(async (res) => {
+      return dispatch(getUsersData(res.data));
     })
     .catch((err) => {
       console.log("err", err);
@@ -42,11 +34,16 @@ export const getUsers = (dispatch) => {
 };
 
 export const getStudentsData = (dispatch) => {
+  const headersData = {
+    "Content-Type": "application/json",
+    Authorization:
+      localStorage.getItem("token") && localStorage.getItem("token"),
+  };
   const getStudentApi = "http://localhost:4000/students/";
   return axios
-    .get(getStudentApi, { headers: headers })
-    .then((res) => {
-      dispatch(getStudentsAllData(res.data));
+    .get(getStudentApi, { headers: headersData })
+    .then(async (res) => {
+      await dispatch(getStudentsAllData(res.data));
       return res;
     })
     .catch((err) => {
@@ -55,11 +52,16 @@ export const getStudentsData = (dispatch) => {
 };
 
 export const createStudentData = (dispatch, data) => {
+  const headersData = {
+    "Content-Type": "application/json",
+    Authorization:
+      localStorage.getItem("token") && localStorage.getItem("token"),
+  };
   const createStudent = "http://localhost:4000/students/create-student";
   return axios
-    .post(createStudent, data, { headers: headers })
-    .then((res) => {
-      dispatch(createStudentsData(res.data));
+    .post(createStudent, data, { headers: headersData })
+    .then(async (res) => {
+      await dispatch(createStudentsData(res.data));
       return res;
     })
     .catch((err) => {
@@ -68,11 +70,16 @@ export const createStudentData = (dispatch, data) => {
 };
 
 export const editStudentData = (dispatch, data, student) => {
+  const headersData = {
+    "Content-Type": "application/json",
+    Authorization:
+      localStorage.getItem("token") && localStorage.getItem("token"),
+  };
   const editStudent = `http://localhost:4000/students/update-student/${student._id}`;
   return axios
-    .put(editStudent, data, { headers: headers })
-    .then((res) => {
-      dispatch(editStudentsData(res.data));
+    .put(editStudent, data, { headers: headersData })
+    .then(async (res) => {
+      await dispatch(editStudentsData(res.data));
       return res;
     })
     .catch((err) => {
@@ -81,9 +88,14 @@ export const editStudentData = (dispatch, data, student) => {
 };
 
 export const deleteStudentData = (dispatch, data) => {
+  const headersData = {
+    "Content-Type": "application/json",
+    Authorization:
+      localStorage.getItem("token") && localStorage.getItem("token"),
+  };
   const deleteStudent = `http://localhost:4000/students/delete-student/${data._id}`;
   return axios
-    .delete(deleteStudent, { headers: headers })
+    .delete(deleteStudent, { headers: headersData })
     .then((res) => {
       return res;
     })

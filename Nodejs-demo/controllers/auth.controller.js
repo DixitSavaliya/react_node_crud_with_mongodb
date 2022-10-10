@@ -20,7 +20,7 @@ const authLogin = async (req, res) => {
      if (!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
  
      // Create token
-     const token = await jwt.sign({ email: checkUserData.email, id: checkUserData._id }, secret, { expiresIn: "1h" });
+     const token = jwt.sign({ email: checkUserData.email, id: checkUserData._id }, secret, { expiresIn: "8h" });
 
      // Send Data in response
      const saveUserData = {
@@ -59,7 +59,7 @@ const authSignup = async (req, res) => {
     const token = await jwt.sign(
       { email: saveUser.email, id: saveUser._id },
       secret,
-      { expiresIn: "1h" }
+      { expiresIn: "8h" }
     );
 
     // Send Data in response

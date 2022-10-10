@@ -22,9 +22,7 @@ export const Login = () => {
 
   const loginUser = async (data, formik) => {
     const response = await login(dispatch, data);
-    console.log('response',response);
-    if(response.token) {
-        localStorage.setItem('token',response.token);
+    if(response.status === 201) {
         formik.resetForm();
         await successLogin();
     }

@@ -3,77 +3,27 @@ let mongoose = require("mongoose"),
   router = express.Router();
 
 const { auth } = require("../middleware/auth");
-// Student Model
-let studentSchema = require("../models/student");
+const {
+  createStudent,
+  getStudent,
+  getStudentBYId,
+  updateStudent,
+  deleteStudent,
+} = require("../controllers/student.controller.js");
 
 // CREATE Student
-router.post("/create-student", auth, (req, res, next) => {
-  studentSchema.create(req.body, (error, data) => {
-    if (error) {
-      return next(error);
-    } else {
-      console.log(data);
-      res.json(data);
-    }
-  });
-});
+router.post("/create-student", auth, createStudent);
 
-// READ Students
-router.get("/", auth, (req, res) => {
-  studentSchema.find((error, data) => {
-    if (error) {
-      return next(error);
-    } else {
-      console.log("data", data);
-      res.json(data);
-    }
-  });
-});
+// Get All Students
+router.get("/", auth, getStudent);
+
+// Get Students By Id
+router.get("/update-student/:id", auth, getStudentBYId);
 
 // UPDATE student
-router
-  .route("/update-student/:id")
-  // Get Single Student
-  .get(auth, (req, res) => {
-    studentSchema.findById(req.params.id, (error, data) => {
-      if (error) {
-        return next(error);
-      } else {
-        res.json(data);
-      }
-    });
-  })
-
-  // Update Student Data
-  .put(auth, (req, res, next) => {
-    studentSchema.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: req.body,
-      },
-      (error, data) => {
-        if (error) {
-          return next(error);
-          console.log(error);
-        } else {
-          res.json(data);
-          console.log("Student updated successfully !");
-        }
-      }
-    );
-  });
+router.put("/update-student/:id", auth, updateStudent);
 
 // Delete Student
-router.delete("/delete-student/:id", auth, (req, res, next) => {
-  studentSchema.findByIdAndRemove(req.params.id, (error, data) => {
-    if (error) {
-      return next(error);
-    } else {
-      res.status(200).json({
-        msg: data,
-      });
-    }
-  });
-});
+router.delete("/delete-student/:id", auth, deleteStudent);
 
 module.exports = router;

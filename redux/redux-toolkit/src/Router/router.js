@@ -14,26 +14,23 @@ import { CreateUser } from "../features/users/createUser";
 import User from "../features/users/user";
 import PrivateRoute from "../PrivateRoute/privateRoute";
 
+const IfLogin = () => {
+  return <Navigate to="/" />;
+};
+
 const RouterList = () => {
-  const token = localStorage.getItem("token")
-    ? localStorage.getItem("token")
-    : null;
-    
+  const token = localStorage.getItem("token");
   return (
     <Router>
       <Routes>
-        <Route
-          path="/login"
-          exact
-          element={!token ? <Login /> : <Navigate to="/" />}
-        />
+        <Route exact path="/login" element={token ? <IfLogin /> : <Login />} />
         <Route element={<PrivateRoute />}>
-          <Route path="/" exact element={<Home />} />
-          <Route path="/counter" exact element={<Counter />} />
-          <Route path="/user" exact element={<User />} />
-          <Route path="/create-user" exact element={<CreateUser />} />
-          <Route path="/student" exact element={<Student />} />
-          <Route path="/create-student" exact element={<CreateStudent />} />
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="/counter" element={<Counter />} />
+          <Route exact path="/user" element={<User />} />
+          <Route exact path="/create-user" element={<CreateUser />} />
+          <Route exact path="/student" element={<Student />} />
+          <Route exact path="/create-student" element={<CreateStudent />} />
         </Route>
       </Routes>
     </Router>
